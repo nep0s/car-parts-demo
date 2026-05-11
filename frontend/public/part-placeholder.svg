@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#e5e7eb"/>
+  <g transform="translate(200,150)" fill="#9ca3af">
+    <!-- Wrench body -->
+    <path d="M-10,-55 L10,-55 L10,30 L-10,30 Z"/>
+    <!-- Wrench head top -->
+    <rect x="-22" y="-62" width="44" height="16" rx="8"/>
+    <!-- Wrench handle knob -->
+    <rect x="-14" y="28" width="28" height="12" rx="6"/>
+    <!-- Gear -->
+    <circle cx="50" cy="-10" r="28" fill="none" stroke="#9ca3af" stroke-width="6"/>
+    <circle cx="50" cy="-10" r="10" fill="#9ca3af"/>
+    <rect x="44" y="-42" width="12" height="12" rx="2"/>
+    <rect x="44" y="18" width="12" height="12" rx="2"/>
+    <rect x="18" y="-16" width="12" height="12" rx="2"/>
+    <rect x="70" y="-16" width="12" height="12" rx="2"/>
+  </g>
+</svg>
