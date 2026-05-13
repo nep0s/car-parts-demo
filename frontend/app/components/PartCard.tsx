@@ -13,6 +13,12 @@ const SOURCE_LABELS: Record<string, string> = {
   globalparts: "Global Parts",
 };
 
+const SOURCE_CLASSES: Record<string, string> = {
+  autopartsplus: "sourceBadgeAutopartsplus",
+  repuestosmax: "sourceBadgeRepuestosmax",
+  globalparts: "sourceBadgeGlobalparts",
+};
+
 function formatVehicle(v: VehicleCompatibility): string {
   const years = `${v.yearStart}–${v.yearEnd}`;
   const extra = [v.engine, v.trim].filter(Boolean).join(" · ");
@@ -38,7 +44,7 @@ export default function PartCard({ part }: { part: Part }) {
       </div>
       <div className={styles.body}>
         {SOURCE_LABELS[part.source] && (
-          <span className={styles.sourceBadge}>{SOURCE_LABELS[part.source]}</span>
+          <span className={`${styles.sourceBadge} ${SOURCE_CLASSES[part.source] ?? ''}`}>{SOURCE_LABELS[part.source]}</span>
         )}
         <h2 className={styles.name}>{part.name}</h2>
         <p className={styles.price}>{formatCLP(part.price)}</p>

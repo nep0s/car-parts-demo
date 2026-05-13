@@ -109,12 +109,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #1d4ed8;
-  background: #eff6ff;
   border-radius: 99px;
   padding: 2px 8px;
   align-self: flex-start;
 }
+
 
 .name {
   font-size: 1.15rem;
@@ -262,10 +261,6 @@
     background: #1f2937;
   }
 
-  .sourceBadge {
-    color: #93c5fd;
-    background: #1e3a5f;
-  }
 
   .meta {
     color: #9ca3af;

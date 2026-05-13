@@ -2,13 +2,13 @@
 
 @layer base {
   :root {
-    --background: #ffffff;
+    --background: #f7f8fa;
     --foreground: #171717;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: #0a0a0a;
+      --background: #111113;
       --foreground: #ededed;
     }
   }
@@ -33,4 +33,14 @@
       color-scheme: dark;
     }
   }
+}
+
+.sourceBadgeAutopartsplus { color: #60a5fa; background: #eff6ff; }
+.sourceBadgeRepuestosmax  { color: #34d399; background: #ecfdf5; }
+.sourceBadgeGlobalparts   { color: #fbbf24; background: #fffbeb; }
+
+@media (prefers-color-scheme: dark) {
+  .sourceBadgeAutopartsplus { color: #bfdbfe; background: #476b92; }
+  .sourceBadgeRepuestosmax  { color: #a7f3d0; background: #30a886; }
+  .sourceBadgeGlobalparts   { color: #fde68a; background: #bd6833; }
 }
