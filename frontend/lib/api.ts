@@ -1,4 +1,4 @@
-const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:3001';
 
 export interface VehicleCompatibility {
   manufacturer: string;

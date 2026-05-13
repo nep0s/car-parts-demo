@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend
 
-## Getting Started
+Next.js app running on port 3000. Uses the App Router with server components for data fetching.
 
-First, run the development server:
+## Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+app/
+├── page.tsx                         # Catalog page — server component, fetches & paginates parts
+├── layout.tsx                       # Root layout
+├── components/
+│   ├── SearchFilters.tsx            # Client component — search + vehicle compatibility filters
+│   ├── PartCard.tsx                 # Part card with supplier badge and compatible vehicles
+│   ├── PartImage.tsx                # Supplier image with local placeholder fallback
+│   ├── PartDetailModal.tsx          # Modal with live price/stock for a single part
+│   └── Pagination.tsx               # Page links, carries active filters via URL params
+lib/
+├── api.ts                           # fetchCatalog / fetchDetail, Part and CatalogFilters types
+└── utils.ts                         # formatCLP currency formatter
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Set `NEXT_PUBLIC_BACKEND_URL=http://localhost:3001` — either in a `.env` file in this directory or by exporting it in your shell — then:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev   # dev server on port 3000
+```
 
-## Learn More
+The backend must already be running on port 3001.
 
-To learn more about Next.js, take a look at the following resources:
+## Key behaviors
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Filters (`search`, `manufacturer`, `model`, `year`) live in URL search params — set by `SearchFilters`, read by `page.tsx`, forwarded to the backend.
+- `Pagination` preserves active filters across page navigation via `extraParams`.
+- `PartImage` falls back to a local placeholder if the supplier image URL is broken or missing.
+- `PartDetailModal` calls `GET /parts/:source/:sku` for fresh price and stock on open.
+- Server components fetch from `http://backend:3001` (internal Docker network); the browser uses `NEXT_PUBLIC_BACKEND_URL`.

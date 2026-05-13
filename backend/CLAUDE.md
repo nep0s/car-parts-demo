@@ -17,15 +17,6 @@ src/parts/
 └── parts.module.ts
 ```
 
-## Running locally
-
-```bash
-npm install
-npm run start:dev   # watch mode on port 3001
-```
-
-The supplier base URLs must be set as environment variables (see `.env.example` at the repo root). You can export them in your shell or create a `.env` file in this directory.
-
 ## Key behaviors
 
 - Each source service fetches its full catalog on startup and on a cron schedule (`PARTS_REFRESH_CRON`), storing it in memory. If a refresh fails, the previous copy is kept.

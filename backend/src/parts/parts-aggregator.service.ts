@@ -82,7 +82,7 @@ export class PartsAggregatorService {
     const start = (page - 1) * limit;
     const parts = merged.slice(start, start + limit);
 
-    return {
+return {
       parts,
       pagination: { page, limit, total: merged.length },
       sourcesSummary: {
