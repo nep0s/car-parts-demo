@@ -5,6 +5,33 @@ import { firstValueFrom } from 'rxjs';
 import { CarPartDto, VehicleCompatibility } from '../dto/car-part.dto';
 import { withRetry } from '../utils/retry';
 
+interface RawVehicle {
+  fabricante: string;
+  modelo: string;
+  anios: { desde: number; hasta: number };
+  motor?: string;
+  version?: string;
+}
+
+interface RawPart {
+  identificacion: { codigoInterno: string; sku: string; codigoOEM: string };
+  informacionBasica: {
+    nombre: string;
+    descripcion: string;
+    marca: { nombre: string };
+    categoria: { nombre: string; id: string };
+  };
+  precio: { valor: number; moneda: string };
+  inventario: { cantidad: number; ubicacion: { bodega: string } };
+  caracteristicas: {
+    peso: { valor: number; unidad: string };
+    // Dynamic key-value map; keys and value types vary per part
+    especificaciones: Record<string, unknown>;
+  };
+  multimedia: { imagenes: Array<{ url: string }> };
+  compatibilidad: { vehiculos: RawVehicle[] };
+}
+
 @Injectable()
 export class RepuestosMaxService implements OnModuleInit {
   private readonly logger = new Logger(RepuestosMaxService.name);
@@ -65,14 +92,14 @@ export class RepuestosMaxService implements OnModuleInit {
     return this.lastRefreshedAt;
   }
 
-  static mapPart(raw: any): CarPartDto {
+  static mapPart(raw: RawPart): CarPartDto {
     const specs = Object.entries(
       raw.caracteristicas?.especificaciones ?? {},
     ).map(([key, value]) => ({ key, value: String(value) }));
 
     const compatibleVehicles: VehicleCompatibility[] = (
       raw.compatibilidad?.vehiculos ?? []
-    ).map((v: any) => ({
+    ).map((v: RawVehicle) => ({
       manufacturer: v.fabricante,
       model: v.modelo,
       yearStart: v.anios?.desde,
@@ -82,7 +109,7 @@ export class RepuestosMaxService implements OnModuleInit {
     }));
 
     const images: string[] = (raw.multimedia?.imagenes ?? []).map(
-      (img: any) => img.url,
+      (img) => img.url,
     );
 
     return {

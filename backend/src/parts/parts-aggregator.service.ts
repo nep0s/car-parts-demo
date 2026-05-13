@@ -47,12 +47,38 @@ export class PartsAggregatorService {
     return part;
   }
 
-  getCatalog(page: number, limit: number): CatalogResponseDto {
+  getCatalog(
+    page: number,
+    limit: number,
+    search?: string,
+    manufacturer?: string,
+    model?: string,
+    year?: number,
+  ): CatalogResponseDto {
     const appStore = this.autoPartsPlusService.getStore();
     const rmStore = this.repuestosMaxService.getStore();
     const gpStore = this.globalPartsService.getStore();
 
-    const merged = [...appStore, ...rmStore, ...gpStore];
+    let merged = [...appStore, ...rmStore, ...gpStore];
+
+    merged.sort((a, b) => a.title.localeCompare(b.title));
+
+    if (search) {
+      const q = search.toLowerCase();
+      merged = merged.filter((p) => p.title.toLowerCase().includes(q));
+    }
+
+    if (manufacturer || model || year !== undefined) {
+      merged = merged.filter((p) =>
+        p.compatibleVehicles.some((vc) => {
+          if (manufacturer && !vc.manufacturer.toLowerCase().includes(manufacturer.toLowerCase())) return false;
+          if (model && !vc.model.toLowerCase().includes(model.toLowerCase())) return false;
+          if (year !== undefined && (year < vc.yearStart || year > vc.yearEnd)) return false;
+          return true;
+        }),
+      );
+    }
+
     const start = (page - 1) * limit;
     const parts = merged.slice(start, start + limit);
 

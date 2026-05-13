@@ -86,12 +86,25 @@ export async function fetchDetail(source: string, sku: string): Promise<PartDeta
   };
 }
 
+export interface CatalogFilters {
+  search?: string;
+  manufacturer?: string;
+  model?: string;
+  year?: number;
+}
+
 export async function fetchCatalog(
   page: number,
   limit: number,
+  filters: CatalogFilters = {},
 ): Promise<{ parts: Part[]; total: number; totalPages: number }> {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (filters.search) params.set('search', filters.search);
+  if (filters.manufacturer) params.set('manufacturer', filters.manufacturer);
+  if (filters.model) params.set('model', filters.model);
+  if (filters.year !== undefined) params.set('year', String(filters.year));
   const res = await fetch(
-    `${BACKEND_URL}/parts/catalog?page=${page}&limit=${limit}`,
+    `${BACKEND_URL}/parts/catalog?${params.toString()}`,
     { cache: 'no-store' },
   );
   if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);

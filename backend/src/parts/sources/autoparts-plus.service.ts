@@ -5,6 +5,29 @@ import { firstValueFrom } from 'rxjs';
 import { CarPartDto, VehicleCompatibility } from '../dto/car-part.dto';
 import { withRetry } from '../utils/retry';
 
+// Vehicle compatibility is encoded as a free-text string, e.g. "Honda Civic 2015-2020 1.5L Turbo".
+// parseVehicle extracts the structured fields via regex; entries without a YYYY-YYYY range are dropped.
+interface RawPart {
+  part_id: string;
+  sku: string;
+  oem_code: string;
+  title: string;
+  desc: string;
+  brand_name: string;
+  category_name: string;
+  unit_price: number;
+  currency_code: string;
+  qty_available: number;
+  warehouse_location: string;
+  weight_value: number;
+  weight_unit: string;
+  img_urls: string[];
+  fits_vehicles: string[];
+  // Parallel arrays: spec_keys[i] is the label for spec_values[i]
+  spec_keys: string[];
+  spec_values: string[];
+}
+
 @Injectable()
 export class AutoPartsPlusService implements OnModuleInit {
   private readonly logger = new Logger(AutoPartsPlusService.name);
@@ -81,7 +104,7 @@ export class AutoPartsPlusService implements OnModuleInit {
     };
   }
 
-  static mapPart(raw: any): CarPartDto {
+  static mapPart(raw: RawPart): CarPartDto {
     const specs: Array<{ key: string; value: string }> = (
       raw.spec_keys as string[]
     ).map((key: string, i: number) => ({ key, value: raw.spec_values[i] }));

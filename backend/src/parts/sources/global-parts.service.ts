@@ -5,6 +5,43 @@ import { firstValueFrom } from 'rxjs';
 import { CarPartDto, VehicleCompatibility } from '../dto/car-part.dto';
 import { withRetry } from '../utils/retry';
 
+// Every response is wrapped in a ResponseEnvelope; only the inner item shape is typed here
+// since the envelope fields are accessed directly in refreshCatalog/fetchDetail.
+interface RawItem {
+  ItemHeader: {
+    InternalId: string;
+    ExternalReferences: {
+      SKU: { Value: string };
+      OEM: { Value: string };
+    };
+  };
+  ProductDetails: {
+    NameInfo: { DisplayName: string };
+    Description: { FullText: string };
+    BrandInfo: { BrandName: string };
+    CategoryInfo: { PrimaryCategory: { Name: string } };
+  };
+  PricingInfo: { ListPrice: { Amount: number; CurrencyCode: string } };
+  AvailabilityInfo: {
+    QuantityInfo: { AvailableQuantity: number };
+    WarehouseInfo: { PrimaryWarehouse: { Name: string } };
+  };
+  PhysicalAttributes: { Weight: { Value: number; Unit: string } };
+  TechnicalSpecifications: {
+    SpecificationList: Array<{ SpecificationName: string; SpecificationValue: string }>;
+  };
+  MediaAssets: { Images: Array<{ ImageUrl: string }> };
+  VehicleCompatibility: {
+    CompatibleVehicles: Array<{
+      Manufacturer: { Name: string };
+      Model: { Name: string };
+      YearRange: { StartYear: number; EndYear: number };
+      EngineInfo?: { Description: string };
+      TrimLevel?: { Name: string };
+    }>;
+  };
+}
+
 @Injectable()
 export class GlobalPartsService implements OnModuleInit {
   private readonly logger = new Logger(GlobalPartsService.name);
@@ -67,14 +104,14 @@ export class GlobalPartsService implements OnModuleInit {
     return this.lastRefreshedAt;
   }
 
-  static mapPart(raw: any): CarPartDto {
+  static mapPart(raw: RawItem): CarPartDto {
     const specs: Array<{ key: string; value: string }> = (
       raw.TechnicalSpecifications?.SpecificationList ?? []
-    ).map((s: any) => ({ key: s.SpecificationName, value: s.SpecificationValue }));
+    ).map((s) => ({ key: s.SpecificationName, value: s.SpecificationValue }));
 
     const compatibleVehicles: VehicleCompatibility[] = (
       raw.VehicleCompatibility?.CompatibleVehicles ?? []
-    ).map((v: any) => ({
+    ).map((v) => ({
       manufacturer: v.Manufacturer?.Name,
       model: v.Model?.Name,
       yearStart: v.YearRange?.StartYear,
@@ -84,7 +121,7 @@ export class GlobalPartsService implements OnModuleInit {
     }));
 
     const images: string[] = (raw.MediaAssets?.Images ?? []).map(
-      (img: any) => img.ImageUrl,
+      (img) => img.ImageUrl,
     );
 
     return {
