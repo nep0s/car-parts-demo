@@ -6,6 +6,14 @@ El backend es una API REST en NestJS que mantiene una copia en memoria del catá
 
 Los archivos CLAUDE.md contienen documentación más detallada.
 
+## Decisiones tomadas
+
+El backend guarda un almacén de los datos de los proveedores.
+
+El frontend accede a estos datos y los despliega en una lista. Se puede acceder a los detalles de un repuesto en específico, lo que revisa que el precio y el stock estén actualizados.
+
+Los datos del almacén se refrescan cada 15 minutos, o si los detalles de precio/stock de un repuesto presentan una discrepancia con los datos disponibles.
+
 ## Despliegue
 
 La página se encuentra desplegada en [Railway](https://www.railway.com/)
