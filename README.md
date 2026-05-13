@@ -1,10 +1,38 @@
 # car-parts-demo
 
-Aplicación de demostración fullstack que agrega el catálogo de repuestos automotrices de tres proveedores externos, los normaliza en un formato común y los expone a través de una interfaz web con búsqueda y filtros por compatibilidad vehicular.
+Aplicación de demostración fullstack que agrega el catálogo de repuestos automotrices de tres proveedores externos, los normaliza en un formato común y los expone a través de una interfaz web.
 
-El backend es una API REST en NestJS que mantiene una copia en memoria del catálogo de cada proveedor y la refresca periódicamente. El frontend es una aplicación Next.js que consume esa API y muestra las piezas en una grilla paginada.
+El backend es una API REST en NestJS que mantiene una copia en memoria del catálogo de cada proveedor y la refresca periódicamente. El frontend es una aplicación Next.js que consume esa API y muestra las piezas en una interfaz paginada.
 
-## Requisitos
+Los archivos CLAUDE.md contienen documentación más detallada.
+
+## Despliegue
+
+La página se encuentra desplegada en [Railway](https://www.railway.com/)
+
+Frontend: https://car-parts-frontend-production-76fb.up.railway.app
+
+Backend: https://car-parts-demo-production.up.railway.app
+
+## API
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/parts/catalog` | Catálogo paginado de todas las fuentes |
+| `GET` | `/parts/:source/:sku` | Detalle de una pieza por fuente y SKU |
+
+Parámetros de `/parts/catalog`:
+
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| `page` | número | Página (default: 1) |
+| `limit` | número | Resultados por página, máx. 100 (default: 10) |
+| `search` | texto | Filtro por nombre de pieza |
+| `manufacturer` | texto | Filtro por marca de vehículo compatible |
+| `model` | texto | Filtro por modelo de vehículo compatible |
+| `year` | número | Filtro por año de vehículo compatible |
+
+## Requisitos (local)
 
 - [Docker](https://www.docker.com/) con Docker Compose
 
