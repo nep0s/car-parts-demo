@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { fetchDetail, type Part, type VehicleCompatibility } from "@/lib/api";
 import { formatCLP } from "@/lib/utils";
 import PartImage from "@/app/components/PartImage";
@@ -25,6 +26,7 @@ interface Props {
 
 export default function PartDetailModal({ part, onClose }: Props) {
   const sku = part.id.split(":")[1];
+  const router = useRouter();
 
   const [price, setPrice] = useState(part.price);
   const [stock, setStock] = useState(part.stock);
@@ -44,14 +46,18 @@ export default function PartDetailModal({ part, onClose }: Props) {
   useEffect(() => {
     fetchDetail(part.source, sku)
       .then((d) => {
+        let changed = false;
         if (d.price !== part.price) {
           setPrice(d.price);
           setPriceUpdated(true);
+          changed = true;
         }
         if (d.stock !== part.stock) {
           setStock(d.stock);
           setStockUpdated(true);
+          changed = true;
         }
+        if (changed) router.refresh();
         setDescription(d.description);
         setBrand(d.brand);
         setOemCode(d.oemCode);

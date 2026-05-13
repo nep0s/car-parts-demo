@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Cron } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import { CarPartDto, VehicleCompatibility } from '../dto/car-part.dto';
+import { withRetry } from '../utils/retry';
 
 @Injectable()
 export class RepuestosMaxService implements OnModuleInit {
@@ -25,10 +26,12 @@ export class RepuestosMaxService implements OnModuleInit {
       let hasNext = true;
 
       while (hasNext) {
-        const { data } = await firstValueFrom(
-          this.httpService.get(`${baseUrl}/catalogo`, {
-            params: { pagina, limite: 100 },
-          }),
+        const { data } = await withRetry(() =>
+          firstValueFrom(
+            this.httpService.get(`${baseUrl}/catalogo`, {
+              params: { pagina, limite: 100 },
+            }),
+          ),
         );
         allParts.push(...data.productos.map(RepuestosMaxService.mapPart));
         hasNext = data.paginacion.tieneSiguiente;
@@ -43,10 +46,12 @@ export class RepuestosMaxService implements OnModuleInit {
   }
 
   async fetchDetail(sku: string): Promise<CarPartDto | null> {
-    const { data } = await firstValueFrom(
-      this.httpService.get(`${process.env.REPUESTOSMAX_BASE_URL}/productos`, {
-        params: { codigo: sku },
-      }),
+    const { data } = await withRetry(() =>
+      firstValueFrom(
+        this.httpService.get(`${process.env.REPUESTOSMAX_BASE_URL}/productos`, {
+          params: { codigo: sku },
+        }),
+      ),
     );
     const raw = data.resultado?.productos?.[0];
     return raw ? RepuestosMaxService.mapPart(raw) : null;

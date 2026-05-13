@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Cron } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import { CarPartDto, VehicleCompatibility } from '../dto/car-part.dto';
+import { withRetry } from '../utils/retry';
 
 @Injectable()
 export class GlobalPartsService implements OnModuleInit {
@@ -25,10 +26,12 @@ export class GlobalPartsService implements OnModuleInit {
       let hasNext = true;
 
       while (hasNext) {
-        const { data } = await firstValueFrom(
-          this.httpService.get(`${baseUrl}/inventory/catalog`, {
-            params: { page, itemsPerPage: 100 },
-          }),
+        const { data } = await withRetry(() =>
+          firstValueFrom(
+            this.httpService.get(`${baseUrl}/inventory/catalog`, {
+              params: { page, itemsPerPage: 100 },
+            }),
+          ),
         );
         const envelope = data.ResponseEnvelope;
         const listing = envelope.Body.CatalogListing;
@@ -45,10 +48,12 @@ export class GlobalPartsService implements OnModuleInit {
   }
 
   async fetchDetail(sku: string): Promise<CarPartDto | null> {
-    const { data } = await firstValueFrom(
-      this.httpService.get(`${process.env.GLOBALPARTS_BASE_URL}/inventory/search`, {
-        params: { partNumber: sku },
-      }),
+    const { data } = await withRetry(() =>
+      firstValueFrom(
+        this.httpService.get(`${process.env.GLOBALPARTS_BASE_URL}/inventory/search`, {
+          params: { partNumber: sku },
+        }),
+      ),
     );
     const raw = data.ResponseEnvelope?.Body?.SearchResults?.Items?.[0];
     return raw ? GlobalPartsService.mapPart(raw) : null;
