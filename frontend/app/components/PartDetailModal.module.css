@@ -1,0 +1,328 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.panel {
+  background: var(--background);
+  border-radius: 12px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.closeBtn {
+  position: sticky;
+  top: 0;
+  float: right;
+  margin: 12px 12px 0 0;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #6b7280;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.closeBtn:hover {
+  color: var(--foreground);
+  background: #f3f4f6;
+}
+
+.liveSpinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid #d1d5db;
+  border-top-color: #1d4ed8;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes highlight {
+  0%   { background: #dbeafe; }
+  100% { background: transparent; }
+}
+
+.updated {
+  border-radius: 4px;
+  animation: highlight 1.5s ease-out forwards;
+}
+
+.errorInline {
+  font-size: 0.78rem;
+  color: #b91c1c;
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 50%;
+  background: #f3f4f6;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.imageWrapper img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 16px;
+}
+
+.body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sourceBadge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-radius: 99px;
+  padding: 2px 8px;
+  align-self: flex-start;
+}
+
+.name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.priceLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin: 0;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin: 0;
+}
+
+.stock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.inStock {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.outOfStock {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.stockCount {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+  padding-top: 4px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.logistics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.logisticsItem {
+  font-size: 0.8rem;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.sectionTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+.vehicles {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.vehicleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vehicleItem {
+  font-size: 0.78rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .panel {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  .closeBtn:hover {
+    background: #1f2937;
+  }
+
+  .spinner {
+    border-color: #374151;
+    border-top-color: #60a5fa;
+  }
+
+  .imageWrapper {
+    background: #1f2937;
+  }
+
+  .sourceBadge {
+    color: #93c5fd;
+    background: #1e3a5f;
+  }
+
+  .meta {
+    color: #9ca3af;
+    background: #1f2937;
+  }
+
+  .price {
+    color: #60a5fa;
+  }
+
+  .priceLabel {
+    color: #9ca3af;
+  }
+
+  .inStock {
+    background: #064e3b;
+    color: #6ee7b7;
+  }
+
+  .outOfStock {
+    background: #7f1d1d;
+    color: #fca5a5;
+  }
+
+  .stockCount {
+    color: #9ca3af;
+  }
+
+  .description {
+    color: #d1d5db;
+    border-top-color: #374151;
+  }
+
+  .logisticsItem {
+    color: #9ca3af;
+    background: #111827;
+    border-color: #374151;
+  }
+
+  .specs,
+  .vehicles {
+    border-top-color: #374151;
+  }
+
+  .specKey {
+    color: #9ca3af;
+  }
+
+  .vehicleItem {
+    color: #9ca3af;
+  }
+
+  .sectionTitle {
+    color: #9ca3af;
+  }
+
+  .closeBtn {
+    color: #9ca3af;
+  }
+}

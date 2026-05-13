@@ -8,6 +8,10 @@ services:
     environment:
       - PORT=3001
       - DATABASE_URL=${DATABASE_URL}
+      - AUTOPARTSPLUS_BASE_URL=${AUTOPARTSPLUS_BASE_URL}
+      - REPUESTOSMAX_BASE_URL=${REPUESTOSMAX_BASE_URL}
+      - GLOBALPARTS_BASE_URL=${GLOBALPARTS_BASE_URL}
+      - PARTS_REFRESH_CRON=${PARTS_REFRESH_CRON:-0 */15 * * * *}
     networks:
       - app-network
 
@@ -19,6 +23,7 @@ services:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - BACKEND_URL=http://backend:3001
     depends_on:
       - backend
     networks:
